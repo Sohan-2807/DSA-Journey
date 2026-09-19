@@ -7,6 +7,7 @@ This repository focuses on developing algorithmic thinking and improving my prob
 ## 🛠️ Language
 
 * **C++**
+* **C**
 
 ## 📂 Topics
 
