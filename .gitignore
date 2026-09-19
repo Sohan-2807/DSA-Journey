@@ -1,0 +1,25 @@
+# VS Code
+.vscode/
+
+# Compiled files
+*.exe
+*.out
+*.o
+*.obj
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env
+.ipynb_checkpoints/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
