@@ -14,3 +14,5 @@ int main(){
     cout<<"Factorial of "<< p <<" is: "<<fact;
     return 0;
 }
+
+// We can use For loop / loop in functions also......
