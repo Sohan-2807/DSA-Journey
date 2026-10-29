@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Unit IV: Recursion, Towers of Hanoi &amp; Divide &amp; Conquer</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --accent-cyan: #39c5cf;
+      --border-color: #30363d;
+      --code-bg: #090d13;
+      --sidebar-width: 280px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+    #sidebar h2 {
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 6px; }
+    #sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: var(--bg-tertiary);
+      color: var(--accent-blue);
+    }
+    #main-content {
+      margin-left: var(--sidebar-width);
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+      width: calc(100% - var(--sidebar-width));
+    }
+    header.header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 2.5rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    section { margin-bottom: 50px; scroll-margin-top: 30px; }
+    h2 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); margin: 24px 0 12px 0; }
+    p { margin-bottom: 14px; color: #c9d1d9; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; color: #c9d1d9; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background-color: rgba(110, 118, 129, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f0883e;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+    pre code { background: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
+    .c-kw { color: #ff7b72; font-weight: 600; }
+    .c-type { color: #79c0ff; }
+    .c-str { color: #a5d6ff; }
+    .c-num { color: #79c0ff; }
+    .c-com { color: #8b949e; font-style: italic; }
+    .c-fn { color: #d2a8ff; }
+    .visual-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .visual-title { font-size: 0.95rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 14px; }
+    .hanoi-stage { display: flex; justify-content: space-around; align-items: flex-end; height: 140px; margin: 20px 0; }
+    .peg { display: flex; flex-direction: column-reverse; align-items: center; width: 120px; border-bottom: 6px solid var(--border-color); position: relative; }
+    .disk { height: 20px; border-radius: 4px; margin-bottom: 3px; }
+    .disk1 { width: 40px; background-color: var(--accent-blue); }
+    .disk2 { width: 70px; background-color: var(--accent-green); }
+    .disk3 { width: 100px; background-color: var(--accent-purple); }
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background-color: var(--bg-secondary);
+    }
+    .callout-info { border-color: var(--accent-blue); background-color: rgba(88, 166, 255, 0.08); }
+    .callout-tip { border-color: var(--accent-green); background-color: rgba(63, 185, 80, 0.08); }
+    .callout-warning { border-color: var(--accent-orange); background-color: rgba(210, 153, 34, 0.08); }
+    .callout-danger { border-color: var(--accent-red); background-color: rgba(248, 81, 73, 0.08); }
+    .callout-header { font-weight: 600; margin-bottom: 6px; }
+    .callout-info .callout-header { color: var(--accent-blue); }
+    .callout-tip .callout-header { color: var(--accent-green); }
+    .callout-warning .callout-header { color: var(--accent-orange); }
+    .callout-danger .callout-header { color: var(--accent-red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background-color: var(--bg-tertiary); color: #fff; }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { position: relative; width: 100%; height: auto; }
+      #main-content { margin-left: 0; width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2>📑 Recursion Contents</h2>
+    <ul>
+      <li><a href="#intro">1. What is Recursion? (Russian Nesting Dolls)</a></li>
+      <li><a href="#classic-examples">2. Factorial, Fibonacci &amp; GCD</a></li>
+      <li><a href="#hanoi">3. Towers of Hanoi</a></li>
+      <li><a href="#divide-conquer">4. Divide and Conquer Concept</a></li>
+      <li><a href="#merge-sort">5. Merge Sort</a></li>
+      <li><a href="#quick-sort">6. Quick Sort</a></li>
+      <li><a href="#comparison">7. Merge Sort vs Quick Sort</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <header class="header">
+      <span class="badge">DSA Unit IV Syllabus</span>
+      <h1>Recursion, Towers of Hanoi &amp; Divide &amp; Conquer</h1>
+      <p class="subtitle">Explained with Russian nesting doll analogies, peg-and-disk puzzle rules, partition visual trees, and production-ready C++ code.</p>
+    </header>
+
+    <section id="intro">
+      <h2>1. What is Recursion? (The Russian Matryoshka Doll!)</h2>
+      <p>Imagine opening a wooden Russian doll: inside is a smaller doll, inside that is an even smaller doll, until you reach the tiniest, solid doll that cannot be opened (the <strong>BASE CASE</strong>)!</p>
+      <div class="callout callout-info">
+        <div class="callout-header">📌 The Two Mandatory Rules of Recursion</div>
+        <ol>
+          <li><strong>Base Case:</strong> The stopping condition that prevents infinite looping.</li>
+          <li><strong>Recursive Step:</strong> Calling the function with a strictly smaller sub-problem that moves closer to the base case.</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="classic-examples">
+      <h2>2. Factorial, Fibonacci &amp; Euclid's GCD</h2>
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">1. Factorial ($N! = N \times (N-1)!$)</div>
+          <pre><code><span class="c-kw">int</span> <span class="c-fn">fact</span>(<span class="c-kw">int</span> n) {
+    <span class="c-kw">if</span> (n &lt;= <span class="c-num">1</span>) <span class="c-kw">return</span> <span class="c-num">1</span>; <span class="c-com">// Base Case</span>
+    <span class="c-kw">return</span> n * fact(n - <span class="c-num">1</span>);
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2. Euclid's GCD ($\gcd(a, b) = \gcd(b, a \% b)$)</div>
+          <pre><code><span class="c-kw">int</span> <span class="c-fn">gcd</span>(<span class="c-kw">int</span> a, <span class="c-kw">int</span> b) {
+    <span class="c-kw">if</span> (b == <span class="c-num">0</span>) <span class="c-kw">return</span> a; <span class="c-com">// Base Case</span>
+    <span class="c-kw">return</span> gcd(b, a % b);
+}</code></pre>
+        </div>
+      </div>
+    </section>
+
+    <section id="hanoi">
+      <h2>3. Towers of Hanoi (The Legendary Puzzle!)</h2>
+      <p><strong>The Story:</strong> You have 3 pegs: <strong>Source (A)</strong>, <strong>Auxiliary (B)</strong>, and <strong>Destination (C)</strong>. Move $N$ disks from Source to Destination following two rules:</p>
+      <ol>
+        <li>Move only one disk at a time.</li>
+        <li><strong>Never</strong> place a larger disk on top of a smaller disk!</li>
+      </ol>
+
+      <div class="visual-box">
+        <div class="visual-title">The Strategy for N Disks:</div>
+        <p>1. Move top $N-1$ disks from Source &rarr; Auxiliary (using Destination as temporary).</p>
+        <p>2. Move the largest $N$-th disk directly from Source &rarr; Destination.</p>
+        <p>3. Move the $N-1$ disks from Auxiliary &rarr; Destination (using Source as temporary).</p>
+      </div>
+
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">towersOfHanoi</span>(<span class="c-kw">int</span> n, <span class="c-kw">char</span> src, <span class="c-kw">char</span> aux, <span class="c-kw">char</span> dst) {
+    <span class="c-kw">if</span> (n == <span class="c-num">1</span>) {
+        <span class="c-type">std::cout</span> &lt;&lt; <span class="c-str">"Move disk 1 from "</span> &lt;&lt; src &lt;&lt; <span class="c-str">" -&gt; "</span> &lt;&lt; dst &lt;&lt; <span class="c-str">'\n'</span>;
+        <span class="c-kw">return</span>;
+    }
+    towersOfHanoi(n - <span class="c-num">1</span>, src, dst, aux);
+    <span class="c-type">std::cout</span> &lt;&lt; <span class="c-str">"Move disk "</span> &lt;&lt; n &lt;&lt; <span class="c-str">" from "</span> &lt;&lt; src &lt;&lt; <span class="c-str">" -&gt; "</span> &lt;&lt; dst &lt;&lt; <span class="c-str">'\n'</span>;
+    towersOfHanoi(n - <span class="c-num">1</span>, aux, src, dst);
+}</code></pre>
+      <div class="callout callout-info">
+        <div class="callout-header">📌 Total Moves Formula</div>
+        <p>Total moves required for $N$ disks: $T(N) = 2^N - 1$. Time Complexity: $O(2^N)$.</p>
+      </div>
+    </section>
+
+    <section id="divide-conquer">
+      <h2>4. Divide and Conquer Strategy</h2>
+      <p>Break a huge, hard problem into smaller, bite-sized identical sub-problems (<strong>Divide</strong>), solve each recursively (<strong>Conquer</strong>), and merge the solutions together (<strong>Combine</strong>).</p>
+    </section>
+
+    <section id="merge-sort">
+      <h2>5. Merge Sort ($O(N \log N)$ Guaranteed)</h2>
+      <p>Divide the array into two equal halves until each sub-array has only 1 element (a single element is already sorted!). Then merge the sorted halves back together.</p>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">merge</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> l, <span class="c-kw">int</span> m, <span class="c-kw">int</span> r) {
+    <span class="c-kw">int</span> n1 = m - l + <span class="c-num">1</span>, n2 = r - m;
+    <span class="c-type">std::vector</span>&lt;<span class="c-kw">int</span>&gt; L(n1), R(n2);
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; n1; ++i) L[i] = arr[l + i];
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> j = <span class="c-num">0</span>; j &lt; n2; ++j) R[j] = arr[m + <span class="c-num">1</span> + j];
+
+    <span class="c-kw">int</span> i = <span class="c-num">0</span>, j = <span class="c-num">0</span>, k = l;
+    <span class="c-kw">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) {
+        <span class="c-kw">if</span> (L[i] &lt;= R[j]) arr[k++] = L[i++];
+        <span class="c-kw">else</span>              arr[k++] = R[j++];
+    }
+    <span class="c-kw">while</span> (i &lt; n1) arr[k++] = L[i++];
+    <span class="c-kw">while</span> (j &lt; n2) arr[k++] = R[j++];
+}
+
+<span class="c-kw">void</span> <span class="c-fn">mergeSort</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> l, <span class="c-kw">int</span> r) {
+    <span class="c-kw">if</span> (l &gt;= r) <span class="c-kw">return</span>;
+    <span class="c-kw">int</span> m = l + (r - l) / <span class="c-num">2</span>;
+    mergeSort(arr, l, m);
+    mergeSort(arr, m + <span class="c-num">1</span>, r);
+    merge(arr, l, m, r);
+}</code></pre>
+      <p><strong>Complexity:</strong> Always $O(N \log N)$ in all cases! Space: $O(N)$ auxiliary.</p>
+    </section>
+
+    <section id="quick-sort">
+      <h2>6. Quick Sort</h2>
+      <p>Pick one element as a <strong>Pivot</strong>. Partition the array so all numbers smaller than the pivot are on the left, and all numbers greater are on the right. Then recursively sort both sides!</p>
+      <pre><code><span class="c-kw">int</span> <span class="c-fn">partition</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> low, <span class="c-kw">int</span> high) {
+    <span class="c-kw">int</span> pivot = arr[high]; <span class="c-com">// Pick rightmost as pivot</span>
+    <span class="c-kw">int</span> i = low - <span class="c-num">1</span>;
+
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> j = low; j &lt; high; ++j) {
+        <span class="c-kw">if</span> (arr[j] &lt; pivot) {
+            i++;
+            <span class="c-type">std::swap</span>(arr[i], arr[j]);
+        }
+    }
+    <span class="c-type">std::swap</span>(arr[i + <span class="c-num">1</span>], arr[high]);
+    <span class="c-kw">return</span> i + <span class="c-num">1</span>; <span class="c-com">// Final pivot index</span>
+}
+
+<span class="c-kw">void</span> <span class="c-fn">quickSort</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> low, <span class="c-kw">int</span> high) {
+    <span class="c-kw">if</span> (low &lt; high) {
+        <span class="c-kw">int</span> pi = partition(arr, low, high);
+        quickSort(arr, low, pi - <span class="c-num">1</span>);
+        quickSort(arr, pi + <span class="c-num">1</span>, high);
+    }
+}</code></pre>
+    </section>
+
+    <section id="comparison">
+      <h2>7. Merge Sort vs Quick Sort Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Merge Sort</th>
+            <th>Quick Sort</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Worst-Case Time</td><td>Guaranteed $O(N \log N)$</td><td>$O(N^2)$ (when poorly partitioned)</td></tr>
+          <tr><td>Average-Case Time</td><td>$O(N \log N)$</td><td>$O(N \log N)$ (faster in practice!)</td></tr>
+          <tr><td>Auxiliary Space</td><td>$O(N)$ extra memory</td><td>$O(\log N)$ stack space (In-place)</td></tr>
+          <tr><td>Stability</td><td>Stable</td><td>Unstable</td></tr>
+          <tr><td>Best For</td><td>Linked Lists &amp; huge datasets</td><td>Arrays in RAM (cache-friendly)</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
