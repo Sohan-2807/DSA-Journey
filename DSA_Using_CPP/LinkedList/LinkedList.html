@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Unit II: Linked Lists - Complete Master Guide</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --accent-cyan: #39c5cf;
+      --border-color: #30363d;
+      --code-bg: #090d13;
+      --sidebar-width: 280px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+    #sidebar h2 {
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 6px; }
+    #sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: var(--bg-tertiary);
+      color: var(--accent-blue);
+    }
+    #main-content {
+      margin-left: var(--sidebar-width);
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+      width: calc(100% - var(--sidebar-width));
+    }
+    header.header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 2.5rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    section { margin-bottom: 50px; scroll-margin-top: 30px; }
+    h2 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); margin: 24px 0 12px 0; }
+    p { margin-bottom: 14px; color: #c9d1d9; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; color: #c9d1d9; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background-color: rgba(110, 118, 129, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f0883e;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+    pre code { background: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
+    .c-kw { color: #ff7b72; font-weight: 600; }
+    .c-type { color: #79c0ff; }
+    .c-str { color: #a5d6ff; }
+    .c-num { color: #79c0ff; }
+    .c-com { color: #8b949e; font-style: italic; }
+    .c-fn { color: #d2a8ff; }
+    .visual-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .visual-title { font-size: 0.95rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 14px; }
+    .linked-list-diagram { display: flex; align-items: center; gap: 8px; margin: 15px 0; flex-wrap: wrap; }
+    .node {
+      display: flex;
+      border: 2px solid var(--accent-blue);
+      border-radius: 6px;
+      overflow: hidden;
+      background-color: var(--code-bg);
+    }
+    .node-data { padding: 8px 14px; background-color: rgba(88, 166, 255, 0.15); font-weight: bold; color: #fff; font-family: monospace; }
+    .node-next { padding: 8px 10px; background-color: rgba(188, 140, 255, 0.15); color: var(--accent-purple); font-size: 0.85rem; font-family: monospace; border-left: 1px solid var(--border-color); }
+    .arrow { color: var(--accent-cyan); font-size: 1.2rem; font-weight: bold; }
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background-color: var(--bg-secondary);
+    }
+    .callout-info { border-color: var(--accent-blue); background-color: rgba(88, 166, 255, 0.08); }
+    .callout-tip { border-color: var(--accent-green); background-color: rgba(63, 185, 80, 0.08); }
+    .callout-warning { border-color: var(--accent-orange); background-color: rgba(210, 153, 34, 0.08); }
+    .callout-danger { border-color: var(--accent-red); background-color: rgba(248, 81, 73, 0.08); }
+    .callout-header { font-weight: 600; margin-bottom: 6px; }
+    .callout-info .callout-header { color: var(--accent-blue); }
+    .callout-tip .callout-header { color: var(--accent-green); }
+    .callout-warning .callout-header { color: var(--accent-orange); }
+    .callout-danger .callout-header { color: var(--accent-red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background-color: var(--bg-tertiary); color: #fff; }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { position: relative; width: 100%; height: auto; }
+      #main-content { margin-left: 0; width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2>📑 Linked List Contents</h2>
+    <ul>
+      <li><a href="#intro">1. What is a Linked List?</a></li>
+      <li><a href="#node-structure">2. Memory Representation &amp; Node</a></li>
+      <li><a href="#traversal">3. Traversal &amp; Counting Nodes</a></li>
+      <li><a href="#insertion">4. Insertion Operations (Head, End, Pos)</a></li>
+      <li><a href="#deletion">5. Deletion Operations</a></li>
+      <li><a href="#search-minmax">6. Searching &amp; Min/Max</a></li>
+      <li><a href="#header-lists">7. Header Linked Lists (Grounded &amp; Circular)</a></li>
+      <li><a href="#two-way">8. Two-Way (Doubly) Linked Lists</a></li>
+      <li><a href="#memory-leak">9. Memory Leak Prevention</a></li>
+      <li><a href="#comparison">10. Array vs Linked List Comparison</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <header class="header">
+      <span class="badge">DSA Unit II Syllabus</span>
+      <h1>Linked Lists: Singly, Header &amp; Two-Way Lists</h1>
+      <p class="subtitle">Explained with playful treasure hunt analogies, visual pointer chain diagrams, insertion/deletion traces, and complete C++ implementations.</p>
+    </header>
+
+    <section id="intro">
+      <h2>1. What is a Linked List? (The Scavenger Hunt Analogy!)</h2>
+      <p>Imagine going on a <strong>Treasure Hunt</strong>: The first clue is in your pocket. It gives you a message and the address to Clue #2. Clue #2 gives you another message and the address to Clue #3. The final clue says "End of Hunt" (NULL)!</p>
+      <div class="callout callout-info">
+        <div class="callout-header">🗝️ Key Difference from Arrays</div>
+        <p>In an array, all items sit right next to each other in memory (contiguous). In a <strong>Linked List</strong>, each element (called a <strong>Node</strong>) can live anywhere in RAM! Each node holds its data and a <strong>pointer</strong> pointing to the next node in the chain.</p>
+      </div>
+    </section>
+
+    <section id="node-structure">
+      <h2>2. Memory Representation &amp; Node Structure</h2>
+      <div class="visual-box">
+        <div class="visual-title">Visual Node Chain: `[Head] -> [10 | •] -> [20 | •] -> [30 | NULL]`</div>
+        <div class="linked-list-diagram">
+          <span style="color:var(--accent-orange); font-weight:bold;">HEAD</span>
+          <span class="arrow">&rarr;</span>
+          <div class="node"><div class="node-data">10</div><div class="node-next">0x200</div></div>
+          <span class="arrow">&rarr;</span>
+          <div class="node"><div class="node-data">20</div><div class="node-next">0x300</div></div>
+          <span class="arrow">&rarr;</span>
+          <div class="node"><div class="node-data">30</div><div class="node-next">NULL</div></div>
+        </div>
+      </div>
+
+      <pre><code><span class="c-kw">struct</span> <span class="c-type">Node</span> {
+    <span class="c-kw">int</span> data;
+    <span class="c-type">Node</span>* next;
+
+    <span class="c-fn">Node</span>(<span class="c-kw">int</span> val) : data(val), next(<span class="c-kw">nullptr</span>) {}
+};</code></pre>
+    </section>
+
+    <section id="traversal">
+      <h2>3. Traversal &amp; Counting Nodes</h2>
+      <p>Start with a temporary pointer at <code>head</code>. Visit the current node, then hop to <code>temp-&gt;next</code> until reaching <code>nullptr</code>.</p>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">traverse</span>(<span class="c-type">Node</span>* head) {
+    <span class="c-type">Node</span>* temp = head;
+    <span class="c-kw">while</span> (temp != <span class="c-kw">nullptr</span>) {
+        <span class="c-type">std::cout</span> &lt;&lt; temp-&gt;data &lt;&lt; <span class="c-str">" -&gt; "</span>;
+        temp = temp-&gt;next;
+    }
+    <span class="c-type">std::cout</span> &lt;&lt; <span class="c-str">"NULL\n"</span>;
+}
+
+<span class="c-kw">int</span> <span class="c-fn">countNodes</span>(<span class="c-type">Node</span>* head) {
+    <span class="c-kw">int</span> count = <span class="c-num">0</span>;
+    <span class="c-type">Node</span>* temp = head;
+    <span class="c-kw">while</span> (temp != <span class="c-kw">nullptr</span>) {
+        count++;
+        temp = temp-&gt;next;
+    }
+    <span class="c-kw">return</span> count;
+}</code></pre>
+    </section>
+
+    <section id="insertion">
+      <h2>4. Insertion Operations: Head, End &amp; Arbitrary Position</h2>
+
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">1. Insert at Beginning (O(1))</div>
+          <p>Create new node, point its <code>next</code> to current <code>head</code>, update <code>head</code>.</p>
+          <pre><code><span class="c-kw">void</span> <span class="c-fn">insertBeginning</span>(<span class="c-type">Node</span>*&amp; head, <span class="c-kw">int</span> val) {
+    <span class="c-type">Node</span>* newNode = <span class="c-kw">new</span> <span class="c-type">Node</span>(val);
+    newNode-&gt;next = head;
+    head = newNode;
+}</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">2. Insert at End (O(N))</div>
+          <p>Traverse to the final node (where <code>temp-&gt;next == NULL</code>), set its <code>next</code> to new node.</p>
+          <pre><code><span class="c-kw">void</span> <span class="c-fn">insertEnd</span>(<span class="c-type">Node</span>*&amp; head, <span class="c-kw">int</span> val) {
+    <span class="c-type">Node</span>* newNode = <span class="c-kw">new</span> <span class="c-type">Node</span>(val);
+    <span class="c-kw">if</span> (head == <span class="c-kw">nullptr</span>) { head = newNode; <span class="c-kw">return</span>; }
+    <span class="c-type">Node</span>* temp = head;
+    <span class="c-kw">while</span> (temp-&gt;next != <span class="c-kw">nullptr</span>) temp = temp-&gt;next;
+    temp-&gt;next = newNode;
+}</code></pre>
+        </div>
+      </div>
+
+      <h3>Insert at Arbitrary Position K:</h3>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">insertAtPosition</span>(<span class="c-type">Node</span>*&amp; head, <span class="c-kw">int</span> pos, <span class="c-kw">int</span> val) {
+    <span class="c-kw">if</span> (pos &lt;= <span class="c-num">1</span>) { insertBeginning(head, val); <span class="c-kw">return</span>; }
+    <span class="c-type">Node</span>* temp = head;
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">1</span>; i &lt; pos - <span class="c-num">1</span> &amp;&amp; temp != <span class="c-kw">nullptr</span>; ++i) {
+        temp = temp-&gt;next;
+    }
+    <span class="c-kw">if</span> (temp == <span class="c-kw">nullptr</span>) <span class="c-kw">return</span>; <span class="c-com">// Position out of bounds</span>
+    <span class="c-type">Node</span>* newNode = <span class="c-kw">new</span> <span class="c-type">Node</span>(val);
+    newNode-&gt;next = temp-&gt;next;
+    temp-&gt;next = newNode;
+}</code></pre>
+    </section>
+
+    <section id="deletion">
+      <h2>5. Deletion Operations</h2>
+      <p>To delete a node, reconnect the preceding node's <code>next</code> pointer to bypass the target, and call <code>delete</code> to free memory!</p>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">deleteHead</span>(<span class="c-type">Node</span>*&amp; head) {
+    <span class="c-kw">if</span> (head == <span class="c-kw">nullptr</span>) <span class="c-kw">return</span>;
+    <span class="c-type">Node</span>* temp = head;
+    head = head-&gt;next; <span class="c-com">// Advance head</span>
+    <span class="c-kw">delete</span> temp;       <span class="c-com">// Free old head</span>
+}</code></pre>
+    </section>
+
+    <section id="search-minmax">
+      <h2>6. Searching &amp; Finding Min/Max</h2>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">findMinMax</span>(<span class="c-type">Node</span>* head, <span class="c-kw">int</span>&amp; minVal, <span class="c-kw">int</span>&amp; maxVal) {
+    <span class="c-kw">if</span> (head == <span class="c-kw">nullptr</span>) <span class="c-kw">return</span>;
+    minVal = maxVal = head-&gt;data;
+    <span class="c-type">Node</span>* temp = head-&gt;next;
+    <span class="c-kw">while</span> (temp != <span class="c-kw">nullptr</span>) {
+        <span class="c-kw">if</span> (temp-&gt;data &lt; minVal) minVal = temp-&gt;data;
+        <span class="c-kw">if</span> (temp-&gt;data &gt; maxVal) maxVal = temp-&gt;data;
+        temp = temp-&gt;next;
+    }
+}</code></pre>
+    </section>
+
+    <section id="header-lists">
+      <h2>7. Header Linked Lists (Grounded &amp; Circular)</h2>
+      <p>A <strong>Header Linked List</strong> contains a special "dummy" node at the front called the <strong>Header Node</strong>. It does not store actual user list items, but instead holds metadata (like total node count):</p>
+      <ul>
+        <li><strong>Grounded Header Linked List:</strong> The last node's <code>next</code> pointer points to <code>NULL</code> (grounded).</li>
+        <li><strong>Circular Header Linked List:</strong> The last node's <code>next</code> pointer wraps around and points back to the <strong>Header Node</strong>! This eliminates <code>NULL</code> checks and allows endless circular traversal.</li>
+      </ul>
+    </section>
+
+    <section id="two-way">
+      <h2>8. Two-Way (Doubly) Linked Lists</h2>
+      <p>In a Singly Linked List, you can only move <em>forward</em>. In a <strong>Two-Way (Doubly) Linked List</strong>, each node has <strong>two pointers</strong>: <code>next</code> (to the following node) and <code>prev</code> (to the preceding node)!</p>
+
+      <div class="visual-box">
+        <div class="visual-title">Doubly Linked Node: `[NULL &lt;- [prev | 10 | next] &lt;-&gt; [prev | 20 | next] -&gt; NULL]`</div>
+      </div>
+
+      <pre><code><span class="c-kw">struct</span> <span class="c-type">DNode</span> {
+    <span class="c-kw">int</span> data;
+    <span class="c-type">DNode</span>* prev;
+    <span class="c-type">DNode</span>* next;
+
+    <span class="c-fn">DNode</span>(<span class="c-kw">int</span> val) : data(val), prev(<span class="c-kw">nullptr</span>), next(<span class="c-kw">nullptr</span>) {}
+};
+
+<span class="c-kw">void</span> <span class="c-fn">insertDoublyHead</span>(<span class="c-type">DNode</span>*&amp; head, <span class="c-kw">int</span> val) {
+    <span class="c-type">DNode</span>* newNode = <span class="c-kw">new</span> <span class="c-type">DNode</span>(val);
+    <span class="c-kw">if</span> (head != <span class="c-kw">nullptr</span>) {
+        newNode-&gt;next = head;
+        head-&gt;prev = newNode;
+    }
+    head = newNode;
+}</code></pre>
+    </section>
+
+    <section id="memory-leak">
+      <h2>9. Memory Leak Prevention in Linked Lists</h2>
+      <div class="callout callout-danger">
+        <div class="callout-header">🚨 Always Free Your Nodes!</div>
+        <p>Simply setting <code>head = nullptr;</code> does <strong>NOT</strong> delete the nodes! They stay stranded on the heap as an invisible memory leak. You must traverse and delete each node individually:</p>
+      </div>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">clearList</span>(<span class="c-type">Node</span>*&amp; head) {
+    <span class="c-type">Node</span>* current = head;
+    <span class="c-kw">while</span> (current != <span class="c-kw">nullptr</span>) {
+        <span class="c-type">Node</span>* nextNode = current-&gt;next;
+        <span class="c-kw">delete</span> current;
+        current = nextNode;
+    }
+    head = <span class="c-kw">nullptr</span>;
+}</code></pre>
+    </section>
+
+    <section id="comparison">
+      <h2>10. Array vs. Linked List Comparison</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Property</th>
+            <th>Array</th>
+            <th>Singly Linked List</th>
+            <th>Doubly Linked List</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Memory Layout</td><td>Contiguous fixed block</td><td>Non-contiguous dynamic nodes</td><td>Non-contiguous dynamic nodes</td></tr>
+          <tr><td>Random Access</td><td>$O(1)$ instant index access</td><td>$O(N)$ sequential traversal</td><td>$O(N)$ sequential traversal</td></tr>
+          <tr><td>Insertion at Front</td><td>$O(N)$ (must shift elements)</td><td>$O(1)$ instant pointer update</td><td>$O(1)$ instant pointer update</td></tr>
+          <tr><td>Memory Overhead</td><td>None (pure data)</td><td>1 pointer per node (8 bytes)</td><td>2 pointers per node (16 bytes)</td></tr>
+          <tr><td>Bidirectional Traversal</td><td>Yes (via index decrements)</td><td>No (forward only)</td><td>Yes (via <code>prev</code> pointers)</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
