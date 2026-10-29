@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Unit I: Asymptotic Analysis &amp; Linear Arrays</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --accent-cyan: #39c5cf;
+      --border-color: #30363d;
+      --code-bg: #090d13;
+      --sidebar-width: 280px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+    #sidebar h2 {
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 6px; }
+    #sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: var(--bg-tertiary);
+      color: var(--accent-blue);
+    }
+    #main-content {
+      margin-left: var(--sidebar-width);
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+      width: calc(100% - var(--sidebar-width));
+    }
+    header.header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 2.5rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    section { margin-bottom: 50px; scroll-margin-top: 30px; }
+    h2 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); margin: 24px 0 12px 0; }
+    p { margin-bottom: 14px; color: #c9d1d9; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; color: #c9d1d9; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background-color: rgba(110, 118, 129, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f0883e;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+    pre code { background: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
+    .c-kw { color: #ff7b72; font-weight: 600; }
+    .c-type { color: #79c0ff; }
+    .c-str { color: #a5d6ff; }
+    .c-num { color: #79c0ff; }
+    .c-com { color: #8b949e; font-style: italic; }
+    .c-fn { color: #d2a8ff; }
+    .visual-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .visual-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--accent-blue);
+      margin-bottom: 14px;
+    }
+    .array-cells { display: flex; gap: 4px; margin: 12px 0; flex-wrap: wrap; }
+    .cell {
+      border: 2px solid var(--accent-blue);
+      background-color: rgba(88, 166, 255, 0.1);
+      min-width: 70px;
+      text-align: center;
+      padding: 10px 4px;
+      border-radius: 6px;
+    }
+    .cell-val { font-size: 1.1rem; font-weight: bold; color: #fff; font-family: monospace; }
+    .cell-idx { font-size: 0.75rem; color: var(--accent-cyan); margin-top: 4px; font-family: monospace; }
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background-color: var(--bg-secondary);
+    }
+    .callout-info { border-color: var(--accent-blue); background-color: rgba(88, 166, 255, 0.08); }
+    .callout-tip { border-color: var(--accent-green); background-color: rgba(63, 185, 80, 0.08); }
+    .callout-warning { border-color: var(--accent-orange); background-color: rgba(210, 153, 34, 0.08); }
+    .callout-danger { border-color: var(--accent-red); background-color: rgba(248, 81, 73, 0.08); }
+    .callout-header { font-weight: 600; margin-bottom: 6px; }
+    .callout-info .callout-header { color: var(--accent-blue); }
+    .callout-tip .callout-header { color: var(--accent-green); }
+    .callout-warning .callout-header { color: var(--accent-orange); }
+    .callout-danger .callout-header { color: var(--accent-red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background-color: var(--bg-tertiary); color: #fff; }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { position: relative; width: 100%; height: auto; }
+      #main-content { margin-left: 0; width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2>📑 DSA Unit I</h2>
+    <ul>
+      <li><a href="#intro">1. What is a Data Structure?</a></li>
+      <li><a href="#asymptotic">2. Asymptotic Notations (O, &Omega;, &Theta;)</a></li>
+      <li><a href="#tradeoff">3. Time-Space Trade-off</a></li>
+      <li><a href="#arrays">4. Linear Arrays: Memory Layout</a></li>
+      <li><a href="#insertion">5. Array Insertion (With Visual Shift)</a></li>
+      <li><a href="#deletion">6. Array Deletion (With Visual Shift)</a></li>
+      <li><a href="#merging">7. Merging Two Arrays</a></li>
+      <li><a href="#complexity-summary">8. Complexity Summary Table</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <header class="header">
+      <span class="badge">DSA Unit I Syllabus</span>
+      <h1>Introduction, Complexity &amp; Linear Arrays</h1>
+      <p class="subtitle">Explained with clear visual flowcharts, step-by-step element shifts, Big-O bounds, and complete C++ implementations.</p>
+    </header>
+
+    <section id="intro">
+      <h2>1. What is a Data Structure? (Like Teaching a Kid!)</h2>
+      <p>Imagine your bedroom has toys scattered everywhere. If you throw them randomly into a pile, finding your favorite Lego block takes forever! But if you organize them into labeled drawers or transparent boxes, you can grab any toy in 1 second.</p>
+      <div class="callout callout-info">
+        <div class="callout-header">🧸 Definition</div>
+        <p>A <strong>Data Structure</strong> is simply a specialized way of organizing, storing, and managing data in a computer's memory so that we can perform operations (search, insert, delete, sort) quickly and efficiently.</p>
+      </div>
+    </section>
+
+    <section id="asymptotic">
+      <h2>2. Asymptotic Notations: Big-O ($O$), Omega ($\Omega$), Theta ($\Theta$)</h2>
+      <p>How do computer scientists measure if an algorithm is fast or slow? We don't use a stopwatch (because a fast supercomputer runs code faster than an old laptop). Instead, we count <strong>how the number of basic operations grows</strong> as the input size $N$ gets larger.</p>
+
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">1. Big-O ($O$) &mdash; Worst Case (Upper Bound)</div>
+          <p><strong>The "It won't get worse than this" Guarantee:</strong> Maximum time an algorithm will take for any input of size $N$.</p>
+          <p><em>Example:</em> Linear search worst case is $O(N)$ (target is at the very last index or absent).</p>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Big-Omega ($\Omega$) &mdash; Best Case (Lower Bound)</div>
+          <p><strong>The "Best Possible Luck" Bound:</strong> Minimum time an algorithm takes under the most ideal input scenario.</p>
+          <p><em>Example:</em> Linear search best case is $\Omega(1)$ (target is found on the very first try at index 0).</p>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Big-Theta ($\Theta$) &mdash; Average / Tight Bound</div>
+          <p><strong>The "Exact Tight Growth Rate":</strong> When the algorithm's upper bound and lower bound grow at the exact same rate ($c_1 g(n) \le f(n) \le c_2 g(n)$).</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="tradeoff">
+      <h2>3. Time-Space Trade-off</h2>
+      <p>In computer science, you often have to choose between saving <strong>time</strong> (execution speed) or saving <strong>space</strong> (memory consumption):</p>
+      <ul>
+        <li><strong>Save Space, Spend Time:</strong> Compress data to use tiny RAM, but spend CPU time decompressing it repeatedly.</li>
+        <li><strong>Save Time, Spend Space:</strong> Precompute and store lookup tables in memory (like a Hash Table or lookup cache) so retrieval takes instant $O(1)$ time, but consumes extra RAM.</li>
+      </ul>
+    </section>
+
+    <section id="arrays">
+      <h2>4. Linear Arrays: Memory Layout &amp; Address Calculation</h2>
+      <p>A <strong>linear array</strong> is a row of contiguous memory lockers side-by-side.</p>
+      <div class="visual-box">
+        <div class="visual-title">Locker Analogy: `int arr[5] = {10, 20, 30, 40, 50}` (Base Address = 2000, 4 bytes each)</div>
+        <div class="array-cells">
+          <div class="cell"><div class="cell-val">10</div><div class="cell-idx">Index 0<br>Addr 2000</div></div>
+          <div class="cell"><div class="cell-val">20</div><div class="cell-idx">Index 1<br>Addr 2004</div></div>
+          <div class="cell"><div class="cell-val">30</div><div class="cell-idx">Index 2<br>Addr 2008</div></div>
+          <div class="cell"><div class="cell-val">40</div><div class="cell-idx">Index 3<br>Addr 2012</div></div>
+          <div class="cell"><div class="cell-val">50</div><div class="cell-idx">Index 4<br>Addr 2016</div></div>
+        </div>
+      </div>
+      <div class="callout callout-info">
+        <div class="callout-header">📌 1D Address Formula</div>
+        <code>Address(arr[i]) = Base_Address + (i - Lower_Bound) * sizeof(Element)</code>
+      </div>
+    </section>
+
+    <section id="insertion">
+      <h2>5. Array Insertion: The Step-by-Step Shifting Process</h2>
+      <p>Imagine people standing in a straight queue. If someone wants to cut in at position 2, everyone from position 2 to the end must <strong>take one step back</strong> to create an empty chair!</p>
+
+      <div class="visual-box">
+        <div class="visual-title">Visualizing Insertion of `99` at Index `2`:</div>
+        <p>1. Original Array: <code>[10, 20, 30, 40]</code> (Size = 4)</p>
+        <p>2. Shift elements right starting from the end: <code>40</code> moves to index 4, <code>30</code> moves to index 3.</p>
+        <p>3. Gap opened at index 2: <code>[10, 20, __, 30, 40]</code></p>
+        <p>4. Place <code>99</code> into index 2: <code>[10, 20, 99, 30, 40]</code> (Size = 5)</p>
+      </div>
+
+      <pre><code><span class="c-kw">bool</span> <span class="c-fn">insertAt</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span>&amp; size, <span class="c-kw">int</span> capacity, <span class="c-kw">int</span> index, <span class="c-kw">int</span> element) {
+    <span class="c-kw">if</span> (size &gt;= capacity || index &lt; <span class="c-num">0</span> || index &gt; size) <span class="c-kw">return false</span>;
+
+    <span class="c-com">// Shift elements right from back to front:</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = size; i &gt; index; --i) {
+        arr[i] = arr[i - <span class="c-num">1</span>];
+    }
+    arr[index] = element; <span class="c-com">// Insert element</span>
+    size++;               <span class="c-com">// Increase size</span>
+    <span class="c-kw">return true</span>;
+}</code></pre>
+      <p><strong>Complexity:</strong> Worst Case $O(N)$ (inserting at index 0 requires shifting all $N$ elements).</p>
+    </section>
+
+    <section id="deletion">
+      <h2>6. Array Deletion: Step-by-Step Left Shift</h2>
+      <p>When someone leaves the line, everyone behind them <strong>takes one step forward</strong> to close the hole!</p>
+      <pre><code><span class="c-kw">bool</span> <span class="c-fn">deleteAt</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span>&amp; size, <span class="c-kw">int</span> index) {
+    <span class="c-kw">if</span> (index &lt; <span class="c-num">0</span> || index &gt;= size) <span class="c-kw">return false</span>;
+
+    <span class="c-com">// Shift elements left:</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = index; i &lt; size - <span class="c-num">1</span>; ++i) {
+        arr[i] = arr[i + <span class="c-num">1</span>];
+    }
+    size--; <span class="c-com">// Decrease size</span>
+    <span class="c-kw">return true</span>;
+}</code></pre>
+      <p><strong>Complexity:</strong> Worst Case $O(N)$ (deleting index 0 shifts $N - 1$ elements).</p>
+    </section>
+
+    <section id="merging">
+      <h2>7. Merging Two Sorted Arrays</h2>
+      <p>Compare the current front elements of both arrays and pick the smaller one to place into the merged array.</p>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">mergeSorted</span>(<span class="c-kw">const int</span> A[], <span class="c-kw">int</span> m, <span class="c-kw">const int</span> B[], <span class="c-kw">int</span> n, <span class="c-kw">int</span> C[]) {
+    <span class="c-kw">int</span> i = <span class="c-num">0</span>, j = <span class="c-num">0</span>, k = <span class="c-num">0</span>;
+    <span class="c-kw">while</span> (i &lt; m &amp;&amp; j &lt; n) {
+        <span class="c-kw">if</span> (A[i] &lt;= B[j]) C[k++] = A[i++];
+        <span class="c-kw">else</span>              C[k++] = B[j++];
+    }
+    <span class="c-com">// Copy remaining elements:</span>
+    <span class="c-kw">while</span> (i &lt; m) C[k++] = A[i++];
+    <span class="c-kw">while</span> (j &lt; n) C[k++] = B[j++];
+}</code></pre>
+      <p><strong>Complexity:</strong> $O(m + n)$ time and $O(m + n)$ space.</p>
+    </section>
+
+    <section id="complexity-summary">
+      <h2>8. Array Operations Complexity Summary</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Operation</th>
+            <th>Best Case</th>
+            <th>Average Case</th>
+            <th>Worst Case</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Access by Index</td><td>$O(1)$</td><td>$O(1)$</td><td>$O(1)$</td></tr>
+          <tr><td>Search (Unsorted)</td><td>$O(1)$</td><td>$O(N)$</td><td>$O(N)$</td></tr>
+          <tr><td>Insertion</td><td>$O(1)$ (at end)</td><td>$O(N)$</td><td>$O(N)$ (at start)</td></tr>
+          <tr><td>Deletion</td><td>$O(1)$ (at end)</td><td>$O(N)$</td><td>$O(N)$ (at start)</td></tr>
+          <tr><td>Merging Two Sorted Arrays</td><td>$O(N + M)$</td><td>$O(N + M)$</td><td>$O(N + M)$</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</body>
+</html>
