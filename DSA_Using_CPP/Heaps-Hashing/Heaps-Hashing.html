@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Unit V: Heaps, HeapSort &amp; Hashing Techniques</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --accent-cyan: #39c5cf;
+      --border-color: #30363d;
+      --code-bg: #090d13;
+      --sidebar-width: 280px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+    #sidebar h2 {
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 6px; }
+    #sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: var(--bg-tertiary);
+      color: var(--accent-blue);
+    }
+    #main-content {
+      margin-left: var(--sidebar-width);
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+      width: calc(100% - var(--sidebar-width));
+    }
+    header.header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 2.5rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    section { margin-bottom: 50px; scroll-margin-top: 30px; }
+    h2 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); margin: 24px 0 12px 0; }
+    p { margin-bottom: 14px; color: #c9d1d9; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; color: #c9d1d9; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background-color: rgba(110, 118, 129, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f0883e;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+    pre code { background: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
+    .c-kw { color: #ff7b72; font-weight: 600; }
+    .c-type { color: #79c0ff; }
+    .c-str { color: #a5d6ff; }
+    .c-num { color: #79c0ff; }
+    .c-com { color: #8b949e; font-style: italic; }
+    .c-fn { color: #d2a8ff; }
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background-color: var(--bg-secondary);
+    }
+    .callout-info { border-color: var(--accent-blue); background-color: rgba(88, 166, 255, 0.08); }
+    .callout-tip { border-color: var(--accent-green); background-color: rgba(63, 185, 80, 0.08); }
+    .callout-warning { border-color: var(--accent-orange); background-color: rgba(210, 153, 34, 0.08); }
+    .callout-danger { border-color: var(--accent-red); background-color: rgba(248, 81, 73, 0.08); }
+    .callout-header { font-weight: 600; margin-bottom: 6px; }
+    .callout-info .callout-header { color: var(--accent-blue); }
+    .callout-tip .callout-header { color: var(--accent-green); }
+    .callout-warning .callout-header { color: var(--accent-orange); }
+    .callout-danger .callout-header { color: var(--accent-red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background-color: var(--bg-tertiary); color: #fff; }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { position: relative; width: 100%; height: auto; }
+      #main-content { margin-left: 0; width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2>📑 Heaps &amp; Hashing</h2>
+    <ul>
+      <li><a href="#heaps-intro">1. What is a Heap?</a></li>
+      <li><a href="#heap-ops">2. Heapify &amp; Operations</a></li>
+      <li><a href="#heapsort">3. HeapSort ($O(N \log N)$)</a></li>
+      <li><a href="#hashing-intro">4. Hashing Fundamentals &amp; Hash Tables</a></li>
+      <li><a href="#open-hashing">5. Open Hashing (Separate Chaining)</a></li>
+      <li><a href="#closed-hashing">6. Closed Hashing (Open Addressing)</a></li>
+      <li><a href="#probing-methods">7. Linear, Quadratic &amp; Double Hashing</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <header class="header">
+      <span class="badge">DSA Unit V Syllabus</span>
+      <h1>Heaps, HeapSort &amp; Hashing Techniques</h1>
+      <p class="subtitle">Explained with corporate hierarchy analogies, collision resolution diagrams, formula proofs, and complete C++ implementations.</p>
+    </header>
+
+    <section id="heaps-intro">
+      <h2>1. What is a Heap? (The Corporate Ladder Analogy!)</h2>
+      <p>A <strong>Binary Heap</strong> is a Complete Binary Tree that satisfies the <strong>Heap Property</strong>:</p>
+      <ul>
+        <li><strong>Max-Heap:</strong> Every parent node is strictly <strong>greater than or equal to</strong> its children. The CEO (maximum element) always sits at the very root!</li>
+        <li><strong>Min-Heap:</strong> Every parent node is strictly <strong>less than or equal to</strong> its children. The root holds the minimum element.</li>
+      </ul>
+      <p>Because a heap is always a Complete Binary Tree, it is stored in a clean, compact 1D array without pointers!</p>
+    </section>
+
+    <section id="heap-ops">
+      <h2>2. Heap Operations: Insertion &amp; Deletion</h2>
+      <ul>
+        <li><strong>Insertion ($O(\log N)$):</strong> Insert new element at the very end of the array, then bubble it up (<strong>Up-Heapify / Shift-Up</strong>) until heap order is restored.</li>
+        <li><strong>Deletion ($O(\log N)$):</strong> Always remove the root element. Replace root with the last element in the array, then push it down (<strong>Down-Heapify / Shift-Down</strong>).</li>
+      </ul>
+
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">heapify</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> n, <span class="c-kw">int</span> i) {
+    <span class="c-kw">int</span> largest = i;
+    <span class="c-kw">int</span> left = <span class="c-num">2</span> * i + <span class="c-num">1</span>;
+    <span class="c-kw">int</span> right = <span class="c-num">2</span> * i + <span class="c-num">2</span>;
+
+    <span class="c-kw">if</span> (left &lt; n &amp;&amp; arr[left] &gt; arr[largest]) largest = left;
+    <span class="c-kw">if</span> (right &lt; n &amp;&amp; arr[right] &gt; arr[largest]) largest = right;
+
+    <span class="c-kw">if</span> (largest != i) {
+        <span class="c-type">std::swap</span>(arr[i], arr[largest]);
+        heapify(arr, n, largest); <span class="c-com">// Recursively heapify affected subtree</span>
+    }
+}</code></pre>
+    </section>
+
+    <section id="heapsort">
+      <h2>3. HeapSort ($O(N \log N)$ In-Place)</h2>
+      <p>1. Build a Max-Heap from the input array ($O(N)$ time).</p>
+      <p>2. Swap the root (largest) with the last element, reduce heap size by 1, and call <code>heapify</code> on the root. Repeat until sorted!</p>
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">heapSort</span>(<span class="c-kw">int</span> arr[], <span class="c-kw">int</span> n) {
+    <span class="c-com">// Build max heap:</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = n / <span class="c-num">2</span> - <span class="c-num">1</span>; i &gt;= <span class="c-num">0</span>; --i) heapify(arr, n, i);
+
+    <span class="c-com">// Extract elements one by one from heap:</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = n - <span class="c-num">1</span>; i &gt; <span class="c-num">0</span>; --i) {
+        <span class="c-type">std::swap</span>(arr[<span class="c-num">0</span>], arr[i]); <span class="c-com">// Move current root to end</span>
+        heapify(arr, i, <span class="c-num">0</span>);        <span class="c-com">// Call max heapify on reduced heap</span>
+    }
+}</code></pre>
+    </section>
+
+    <section id="hashing-intro">
+      <h2>4. Hashing Fundamentals &amp; Hash Tables</h2>
+      <p><strong>The Coat Check Analogy:</strong> When you check your winter coat at a theater, they hand you a numbered plastic token (a <strong>Hash</strong>). When you leave, they instantly hand your coat back without searching through every coat in the cloakroom! Hashing achieves average <strong>$O(1)$ constant time lookup</strong>.</p>
+      <div class="callout callout-info">
+        <div class="callout-header">📌 Division Hash Function</div>
+        <code>h(k) = k mod m</code> (where $m$ is the table size, ideally a prime number).
+      </div>
+      <p><strong>Collision:</strong> When two different keys produce the exact same bucket index ($h(k_1) = h(k_2)$).</p>
+    </section>
+
+    <section id="open-hashing">
+      <h2>5. Open Hashing (Separate Chaining)</h2>
+      <p>Each slot in the hash table points to the head of a <strong>linked list</strong>. If multiple keys hash to the same bucket, they simply get chained to that bucket's list!</p>
+      <pre><code><span class="c-kw">class</span> <span class="c-type">ChainedHashTable</span> {
+    <span class="c-kw">int</span> BUCKETS = <span class="c-num">7</span>;
+    <span class="c-type">std::vector</span>&lt;<span class="c-type">std::list</span>&lt;<span class="c-kw">int</span>&gt;&gt; table;
+<span class="c-kw">public:</span>
+    <span class="c-fn">ChainedHashTable</span>() : table(BUCKETS) {}
+
+    <span class="c-kw">int</span> <span class="c-fn">hashFunc</span>(<span class="c-kw">int</span> key) { <span class="c-kw">return</span> key % BUCKETS; }
+
+    <span class="c-kw">void</span> <span class="c-fn">insert</span>(<span class="c-kw">int</span> key) {
+        table[hashFunc(key)].push_back(key);
+    }
+};</code></pre>
+    </section>
+
+    <section id="closed-hashing">
+      <h2>6. Closed Hashing (Open Addressing)</h2>
+      <p>All elements live directly inside the table array (no linked lists). If a collision occurs at index $h$, we probe to find the <strong>next available empty slot</strong> inside the table.</p>
+    </section>
+
+    <section id="probing-methods">
+      <h2>7. Probing Techniques Comparison</h2>
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">1. Linear Probing</div>
+          <p>Probe sequence: check $h, h+1, h+2, \dots \bmod m$.</p>
+          <p><strong style="color:var(--accent-red)">Drawback:</strong> Causes <strong>Primary Clustering</strong> (long continuous blocks of occupied cells form, slowing searches down).</p>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Quadratic Probing</div>
+          <p>Probe sequence: $h(k, i) = (h'(k) + c_1 i + c_2 i^2) \bmod m$.</p>
+          <p>Jumps further to eliminate primary clustering, but can cause <em>Secondary Clustering</em>.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Double Hashing (Best)</div>
+          <p>Uses a secondary hash function to calculate step size:</p>
+          <code>h(k, i) = (h1(k) + i * h2(k)) mod m</code>
+          <p><strong style="color:var(--accent-green)">Benefit:</strong> Completely eliminates both primary and secondary clustering!</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
