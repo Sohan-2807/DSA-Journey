@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DSA Unit IV: Binary Trees &amp; Binary Search Trees (BST)</title>
+  <style>
+    :root {
+      --bg-primary: #0d1117;
+      --bg-secondary: #161b22;
+      --bg-tertiary: #21262d;
+      --text-main: #e6edf3;
+      --text-muted: #8b949e;
+      --accent-blue: #58a6ff;
+      --accent-green: #3fb950;
+      --accent-purple: #bc8cff;
+      --accent-orange: #d29922;
+      --accent-red: #f85149;
+      --accent-cyan: #39c5cf;
+      --border-color: #30363d;
+      --code-bg: #090d13;
+      --sidebar-width: 280px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.65;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    #sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--bg-secondary);
+      border-right: 1px solid var(--border-color);
+      position: fixed;
+      top: 0; bottom: 0; left: 0;
+      overflow-y: auto;
+      padding: 24px 16px;
+      z-index: 100;
+    }
+    #sidebar h2 {
+      font-size: 1.15rem;
+      color: var(--accent-blue);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    #sidebar ul { list-style: none; }
+    #sidebar li { margin-bottom: 6px; }
+    #sidebar a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      display: block;
+      padding: 6px 10px;
+      border-radius: 6px;
+      transition: all 0.2s ease;
+    }
+    #sidebar a:hover, #sidebar a.active {
+      background-color: var(--bg-tertiary);
+      color: var(--accent-blue);
+    }
+    #main-content {
+      margin-left: var(--sidebar-width);
+      padding: 40px 60px 100px 60px;
+      max-width: 1100px;
+      width: calc(100% - var(--sidebar-width));
+    }
+    header.header {
+      margin-bottom: 40px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 20px;
+      background: rgba(88, 166, 255, 0.15);
+      color: var(--accent-blue);
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      margin-bottom: 12px;
+    }
+    h1 { font-size: 2.5rem; color: #fff; margin-bottom: 12px; }
+    .subtitle { font-size: 1.1rem; color: var(--text-muted); }
+    section { margin-bottom: 50px; scroll-margin-top: 30px; }
+    h2 {
+      font-size: 1.6rem;
+      color: #fff;
+      margin-bottom: 18px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    h3 { font-size: 1.25rem; color: var(--accent-cyan); margin: 24px 0 12px 0; }
+    p { margin-bottom: 14px; color: #c9d1d9; }
+    ul, ol { margin-left: 24px; margin-bottom: 16px; color: #c9d1d9; }
+    li { margin-bottom: 6px; }
+    code {
+      font-family: "JetBrains Mono", Consolas, monospace;
+      font-size: 0.88em;
+      background-color: rgba(110, 118, 129, 0.2);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #f0883e;
+    }
+    pre {
+      background-color: var(--code-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+      overflow-x: auto;
+      margin: 14px 0 20px 0;
+    }
+    pre code { background: none; padding: 0; color: #e6edf3; font-size: 0.9rem; }
+    .c-kw { color: #ff7b72; font-weight: 600; }
+    .c-type { color: #79c0ff; }
+    .c-str { color: #a5d6ff; }
+    .c-num { color: #79c0ff; }
+    .c-com { color: #8b949e; font-style: italic; }
+    .c-fn { color: #d2a8ff; }
+    .visual-box {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+      overflow-x: auto;
+    }
+    .visual-title { font-size: 0.95rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 14px; }
+    .callout {
+      border-left: 4px solid;
+      border-radius: 0 8px 8px 0;
+      padding: 14px 18px;
+      margin: 18px 0;
+      background-color: var(--bg-secondary);
+    }
+    .callout-info { border-color: var(--accent-blue); background-color: rgba(88, 166, 255, 0.08); }
+    .callout-tip { border-color: var(--accent-green); background-color: rgba(63, 185, 80, 0.08); }
+    .callout-warning { border-color: var(--accent-orange); background-color: rgba(210, 153, 34, 0.08); }
+    .callout-danger { border-color: var(--accent-red); background-color: rgba(248, 81, 73, 0.08); }
+    .callout-header { font-weight: 600; margin-bottom: 6px; }
+    .callout-info .callout-header { color: var(--accent-blue); }
+    .callout-tip .callout-header { color: var(--accent-green); }
+    .callout-warning .callout-header { color: var(--accent-orange); }
+    .callout-danger .callout-header { color: var(--accent-red); }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+      background-color: var(--bg-secondary);
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+    th, td { padding: 12px 16px; border-bottom: 1px solid var(--border-color); font-size: 0.9rem; }
+    th { background-color: var(--bg-tertiary); color: #fff; }
+    .comparison-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .card-title { font-size: 1.1rem; font-weight: 600; color: var(--accent-blue); margin-bottom: 8px; }
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      #sidebar { position: relative; width: 100%; height: auto; }
+      #main-content { margin-left: 0; width: 100%; padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+  <nav id="sidebar">
+    <h2>📑 Tree Contents</h2>
+    <ul>
+      <li><a href="#intro">1. What is a Tree? (Upside Down Tree)</a></li>
+      <li><a href="#tree-types">2. Types of Binary Trees</a></li>
+      <li><a href="#representation">3. Linked &amp; Sequential Representation</a></li>
+      <li><a href="#bst">4. Binary Search Tree (BST)</a></li>
+      <li><a href="#bst-ops">5. BST Search, Insert &amp; Delete (3 Cases)</a></li>
+      <li><a href="#traversals">6. Tree Traversals (In, Pre, Post)</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content">
+    <header class="header">
+      <span class="badge">DSA Unit IV Syllabus</span>
+      <h1>Trees &amp; Binary Search Trees (BST)</h1>
+      <p class="subtitle">Explained with family tree analogies, ASCII branching diagrams, 3-case deletion walk-throughs, and complete C++ implementations.</p>
+    </header>
+
+    <section id="intro">
+      <h2>1. What is a Tree? (The Family Tree Analogy!)</h2>
+      <p>In computer science, a <strong>Tree</strong> is an upside-down tree: the <strong>Root</strong> sits at the very top, and branches grow downwards towards the leaves!</p>
+      <ul>
+        <li><strong>Root:</strong> The topmost node with no parent.</li>
+        <li><strong>Leaf Node:</strong> A node with zero children.</li>
+        <li><strong>Binary Tree:</strong> A hierarchical data structure where every node has <strong>at most 2 children</strong> (called <em>Left Child</em> and <em>Right Child</em>).</li>
+      </ul>
+
+      <div class="visual-box">
+        <div class="visual-title">Visual ASCII Binary Tree:</div>
+        <pre><code>        [ 50 ]  &lt;-- Root Node
+        /    \
+     [ 30 ]  [ 70 ]
+     /    \      \
+   [20]  [40]   [80] &lt;-- Leaf Nodes</code></pre>
+      </div>
+    </section>
+
+    <section id="tree-types">
+      <h2>2. Types of Binary Trees (Syllabus Core)</h2>
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">1. Complete Binary Tree</div>
+          <p>Every level is completely filled, except possibly the last level, which is filled from <strong>left to right</strong> without gaps. (Critical for Heaps!).</p>
+        </div>
+        <div class="card">
+          <div class="card-title">2. Extended / Strict Binary Tree</div>
+          <p>Every node has <strong>either 0 or exactly 2 children</strong>. No node has only 1 child.</p>
+        </div>
+        <div class="card">
+          <div class="card-title">3. Full Binary Tree</div>
+          <p>All nodes have 2 children, and all leaf nodes sit at the exact same depth level.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="representation">
+      <h2>3. Memory Representations of Trees</h2>
+
+      <div class="comparison-grid">
+        <div class="card">
+          <div class="card-title">A. Linked Representation (Pointers)</div>
+          <pre><code><span class="c-kw">struct</span> <span class="c-type">TreeNode</span> {
+    <span class="c-kw">int</span> data;
+    <span class="c-type">TreeNode</span>* left;
+    <span class="c-type">TreeNode</span>* right;
+
+    <span class="c-fn">TreeNode</span>(<span class="c-kw">int</span> v) : data(v), left(<span class="c-kw">nullptr</span>), right(<span class="c-kw">nullptr</span>) {}
+};</code></pre>
+        </div>
+
+        <div class="card">
+          <div class="card-title">B. Sequential (Array) Representation</div>
+          <p>Stored in a 1D array using mathematical parent-child indexing (1-based index):</p>
+          <ul>
+            <li><strong>Parent at index $i$:</strong></li>
+            <li><strong>Left Child:</strong> $2 \times i$</li>
+            <li><strong>Right Child:</strong> $2 \times i + 1$</li>
+            <li><strong>Parent of node $j$:</strong> $\lfloor j / 2 \rfloor$</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="bst">
+      <h2>4. Binary Search Tree (BST)</h2>
+      <div class="callout callout-info">
+        <div class="callout-header">📌 The Golden Rule of BST</div>
+        <p>For every single node: All values in the <strong>Left subtree</strong> must be <strong>LESS</strong> than the node, and all values in the <strong>Right subtree</strong> must be <strong>GREATER</strong> than the node!</p>
+        <code>Left_Subtree &lt; Node &lt; Right_Subtree</code>
+      </div>
+    </section>
+
+    <section id="bst-ops">
+      <h2>5. BST Operations: Search, Insert &amp; Delete</h2>
+
+      <h3>1. Searching in BST ($O(h)$ time)</h3>
+      <pre><code><span class="c-type">TreeNode</span>* <span class="c-fn">searchBST</span>(<span class="c-type">TreeNode</span>* root, <span class="c-kw">int</span> key) {
+    <span class="c-kw">if</span> (root == <span class="c-kw">nullptr</span> || root-&gt;data == key) <span class="c-kw">return</span> root;
+    <span class="c-kw">if</span> (key &lt; root-&gt;data) <span class="c-kw">return</span> searchBST(root-&gt;left, key);
+    <span class="c-kw">return</span> searchBST(root-&gt;right, key);
+}</code></pre>
+
+      <h3>2. Insertion in BST</h3>
+      <pre><code><span class="c-type">TreeNode</span>* <span class="c-fn">insertBST</span>(<span class="c-type">TreeNode</span>* root, <span class="c-kw">int</span> val) {
+    <span class="c-kw">if</span> (root == <span class="c-kw">nullptr</span>) <span class="c-kw">return new</span> <span class="c-type">TreeNode</span>(val);
+    <span class="c-kw">if</span> (val &lt; root-&gt;data) root-&gt;left = insertBST(root-&gt;left, val);
+    <span class="c-kw">else if</span> (val &gt; root-&gt;data) root-&gt;right = insertBST(root-&gt;right, val);
+    <span class="c-kw">return</span> root;
+}</code></pre>
+
+      <h3>3. Deletion in BST (The 3 Cases)</h3>
+      <ul>
+        <li><strong>Case 1 (Leaf Node):</strong> Has 0 children &rarr; simply delete the node and set parent pointer to <code>NULL</code>.</li>
+        <li><strong>Case 2 (One Child):</strong> Node has only 1 child &rarr; bypass the node and connect parent directly to that child.</li>
+        <li><strong>Case 3 (Two Children):</strong> Find the <strong>In-Order Successor</strong> (smallest value in the Right subtree), copy its value to the current node, then recursively delete that successor!</li>
+      </ul>
+    </section>
+
+    <section id="traversals">
+      <h2>6. Tree Traversals (In-order, Pre-order, Post-order)</h2>
+      <table>
+        <thead><tr><th>Traversal</th><th>Order of Visit</th><th>Special Property in BST</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>In-Order</strong></td>
+            <td><strong>Left &rarr; Root &rarr; Right</strong></td>
+            <td><strong>Always prints BST values in sorted ascending order!</strong></td>
+          </tr>
+          <tr>
+            <td><strong>Pre-Order</strong></td>
+            <td><strong>Root &rarr; Left &rarr; Right</strong></td>
+            <td>Used to clone/serialize a tree copy.</td>
+          </tr>
+          <tr>
+            <td><strong>Post-Order</strong></td>
+            <td><strong>Left &rarr; Right &rarr; Root</strong></td>
+            <td>Used to delete trees from bottom to top (freeing memory).</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <pre><code><span class="c-kw">void</span> <span class="c-fn">inOrder</span>(<span class="c-type">TreeNode</span>* root) {
+    <span class="c-kw">if</span> (root == <span class="c-kw">nullptr</span>) <span class="c-kw">return</span>;
+    inOrder(root-&gt;left);
+    <span class="c-type">std::cout</span> &lt;&lt; root-&gt;data &lt;&lt; <span class="c-str">" "</span>;
+    inOrder(root-&gt;right);
+}</code></pre>
+    </section>
+  </main>
+</body>
+</html>
