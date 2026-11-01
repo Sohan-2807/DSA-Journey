@@ -23,7 +23,8 @@ DSA-Journey/
 ├── Recursion/
 ├── Trees/
 ├── Graphs/
-└── Problem-Solving/
+|── Practice/
+└── Notes in HTML/
 ```
 
 ## 🎯 What I'm Learning
