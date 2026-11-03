@@ -2,7 +2,6 @@
 #include <stack>
 using namespace std;
 
-// Definition of a Binary Tree Node
 struct Node {
     int data;
     Node* left;
