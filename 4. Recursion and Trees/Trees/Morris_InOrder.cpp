@@ -5,13 +5,24 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-
-    Node(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
 };
+
+Node* createNode(int val) {
+    Node* newNode = new Node;
+    newNode->data = val;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* createTree() {
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    return root;
+}
 
 // Morris In-Order Traversal (O(1) auxiliary space)
 void morrisInOrder(Node* root) {
@@ -22,19 +33,15 @@ void morrisInOrder(Node* root) {
             cout << curr->data << " ";
             curr = curr->right;
         } else {
-            // Find the in-order predecessor of curr
             Node* prev = curr->left;
             while (prev->right != nullptr && prev->right != curr) {
                 prev = prev->right;
             }
 
-            // Create temporary thread to curr
             if (prev->right == nullptr) {
                 prev->right = curr;
                 curr = curr->left;
-            }
-            // Remove thread and visit curr
-            else {
+            } else {
                 prev->right = nullptr;
                 cout << curr->data << " ";
                 curr = curr->right;
@@ -44,17 +51,7 @@ void morrisInOrder(Node* root) {
 }
 
 int main() {
-    // Constructed Binary Tree:
-    //        1
-    //       / \
-    //      2   3
-    //     / \
-    //    4   5
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
+    Node* root = createTree();
 
     cout << "Morris In-Order Traversal: ";
     morrisInOrder(root);
