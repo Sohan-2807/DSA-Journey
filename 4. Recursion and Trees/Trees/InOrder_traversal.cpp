@@ -6,13 +6,24 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-
-    Node(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
 };
+
+Node* createNode(int val) {
+    Node* newNode = new Node;
+    newNode->data = val;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* createTree() {
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    return root;
+}
 
 // 1. In-order traversal (Recursive): Left -> Root -> Right
 void inOrderRecursive(Node* root) {
@@ -29,35 +40,22 @@ void inOrderStack(Node* root) {
     Node* curr = root;
 
     while (curr != nullptr || !st.empty()) {
-        // Reach leftmost node of current node
         while (curr != nullptr) {
             st.push(curr);
             curr = curr->left;
         }
 
-        // Current must be null at this point
         curr = st.top();
         st.pop();
 
         cout << curr->data << " ";
 
-        // Visit right subtree
         curr = curr->right;
     }
 }
 
 int main() {
-    // Construct sample binary tree
-    //        1
-    //       / \
-    //      2   3
-    //     / \
-    //    4   5
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
+    Node* root = createTree();
 
     cout << "In-order Traversal (Recursive): ";
     inOrderRecursive(root);
@@ -69,4 +67,3 @@ int main() {
 
     return 0;
 }
-
