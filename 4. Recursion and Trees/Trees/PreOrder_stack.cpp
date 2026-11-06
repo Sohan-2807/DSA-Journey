@@ -6,22 +6,25 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-
-    // Constructor to initialize a new node
-    Node(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
 };
 
-/**
- * Preorder Traversal (Iterative using Stack):
- * Order: Root -> Left Subtree -> Right Subtree
- *
- * Time Complexity:  O(N) - visits every node once
- * Space Complexity: O(H) - where H is tree height (O(N) in worst case)
- */
+Node* createNode(int val) {
+    Node* newNode = new Node;
+    newNode->data = val;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* createTree() {
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    return root;
+}
+
 void preOrder(Node* root) {
     if (root == nullptr) {
         return;
@@ -34,15 +37,11 @@ void preOrder(Node* root) {
         Node* curr = st.top();
         st.pop();
 
-        // 1. Visit Root
         cout << curr->data << " ";
 
-        // 2. Push right child first
         if (curr->right != nullptr) {
             st.push(curr->right);
         }
-
-        // 3. Push left child so it gets processed next
         if (curr->left != nullptr) {
             st.push(curr->left);
         }
@@ -50,14 +49,7 @@ void preOrder(Node* root) {
 }
 
 int main() {
-   
-
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
-    root->right->right = new Node(6);
+    Node* root = createTree();
 
     cout << "Preorder Traversal (Using Stack): ";
     preOrder(root);
@@ -65,4 +57,3 @@ int main() {
 
     return 0;
 }
-
