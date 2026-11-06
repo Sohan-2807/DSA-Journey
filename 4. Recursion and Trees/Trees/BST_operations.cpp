@@ -5,18 +5,20 @@ struct Node {
     int data;
     Node* left;
     Node* right;
-
-    Node(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
 };
+
+Node* createNode(int val) {
+    Node* newNode = new Node;
+    newNode->data = val;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
 
 // Insert a node into BST
 Node* insertBST(Node* root, int val) {
     if (root == nullptr) {
-        return new Node(val);
+        return createNode(val);
     }
     if (val < root->data) {
         root->left = insertBST(root->left, val);
@@ -120,4 +122,3 @@ int main() {
 
     return 0;
 }
-
