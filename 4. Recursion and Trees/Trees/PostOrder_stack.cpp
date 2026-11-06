@@ -19,21 +19,6 @@ struct Node {
 /**
  * Postorder Traversal (Iterative using 2 Stacks):
  * Order: Left Subtree -> Right Subtree -> Root
- *
- * Algorithm:
- * 1. Push root to st1.
- * 2. While st1 is not empty:
- *    a. Pop top node from st1 and push it onto st2.
- *    b. Push left child of popped node to st1 (if exists).
- *    c. Push right child of popped node to st1 (if exists).
- * 3. Pop and print all nodes from st2.
- *
- * Why this works:
- * - In st1, we visit nodes in order: Root -> Right -> Left.
- * - Pushing them into st2 reverses this order to: Left -> Right -> Root!
- *
- * Time Complexity:  O(N)
- * Space Complexity: O(N)
  */
 void postOrder(Node* root) {
     if (root == nullptr) {
