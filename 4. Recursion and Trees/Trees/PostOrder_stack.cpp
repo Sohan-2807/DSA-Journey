@@ -2,24 +2,29 @@
 #include <stack>
 using namespace std;
 
-// Definition of a Binary Tree Node
 struct Node {
     int data;
     Node* left;
     Node* right;
-
-    // Constructor to initialize a new node
-    Node(int val) {
-        data = val;
-        left = nullptr;
-        right = nullptr;
-    }
 };
 
-/**
- * Postorder Traversal (Iterative using 2 Stacks):
- * Order: Left Subtree -> Right Subtree -> Root
- */
+Node* createNode(int val) {
+    Node* newNode = new Node;
+    newNode->data = val;
+    newNode->left = nullptr;
+    newNode->right = nullptr;
+    return newNode;
+}
+
+Node* createTree() {
+    Node* root = createNode(1);
+    root->left = createNode(2);
+    root->right = createNode(3);
+    root->left->left = createNode(4);
+    root->left->right = createNode(5);
+    return root;
+}
+
 void postOrder(Node* root) {
     if (root == nullptr) {
         return;
@@ -33,18 +38,14 @@ void postOrder(Node* root) {
         st1.pop();
         st2.push(curr);
 
-        // Push left child to st1 first
         if (curr->left != nullptr) {
             st1.push(curr->left);
         }
-
-        // Push right child to st1 second
         if (curr->right != nullptr) {
             st1.push(curr->right);
         }
     }
 
-    // Nodes in st2 are in Left -> Right -> Root order
     while (!st2.empty()) {
         cout << st2.top()->data << " ";
         st2.pop();
@@ -52,14 +53,7 @@ void postOrder(Node* root) {
 }
 
 int main() {
-   
-
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
-    root->right->right = new Node(6);
+    Node* root = createTree();
 
     cout << "Postorder Traversal (Using Stack): ";
     postOrder(root);
@@ -67,4 +61,3 @@ int main() {
 
     return 0;
 }
-
