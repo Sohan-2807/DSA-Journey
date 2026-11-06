@@ -19,15 +19,6 @@ struct Node {
  * Preorder Traversal (Iterative using Stack):
  * Order: Root -> Left Subtree -> Right Subtree
  *
- * Algorithm:
- * 1. Push the root node to the stack.
- * 2. While the stack is not empty:
- *    a. Pop the top node and print its data (Root).
- *    b. Push its RIGHT child to the stack (if exists).
- *    c. Push its LEFT child to the stack (if exists).
- *       (Note: Right child is pushed first so that Left child 
- *        is on top and popped/processed first due to LIFO nature).
- *
  * Time Complexity:  O(N) - visits every node once
  * Space Complexity: O(H) - where H is tree height (O(N) in worst case)
  */
