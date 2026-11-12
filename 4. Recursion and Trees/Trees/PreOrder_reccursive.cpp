@@ -16,11 +16,22 @@ Node* createNode(int val) {
 }
 
 Node* createTree() {
-    Node* root = createNode(1);
-    root->left = createNode(2);
-    root->right = createNode(3);
-    root->left->left = createNode(4);
-    root->left->right = createNode(5);
+    int data;
+    cout << "Enter data (-1 for NULL): ";
+    cin >> data;
+
+    if (data == -1) {
+        return nullptr;
+    }
+
+    Node* root = createNode(data);
+
+    cout << "Enter left child of " << data << ":" << endl;
+    root->left = createTree();
+
+    cout << "Enter right child of " << data << ":" << endl;
+    root->right = createTree();
+
     return root;
 }
 
@@ -35,9 +46,10 @@ void preOrder(Node* root) {
 }
 
 int main() {
+    cout << "Create Binary Tree:" << endl;
     Node* root = createTree();
 
-    cout << "Preorder Traversal (Recursive): ";
+    cout << "\nPreorder Traversal (Recursive): ";
     preOrder(root);
     cout << endl;
 
