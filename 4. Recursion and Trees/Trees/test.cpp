@@ -1,3 +1,5 @@
+// Some errors in code #Fix Later on.....
+
 #include<iostream>
 using namespace std;
 
@@ -41,7 +43,7 @@ int main()
     root = insertNode(root, 40);
     root = insertNode(root, 70);
     root = insertNode(root, 60);
-    root = insertNode(root, 80);
+    root = insertNode(root, 90);
 
 Node* found = searchNode(root, 25);
 
