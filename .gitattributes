@@ -1,0 +1,5 @@
+# GitHub Linguist Overrides
+# Exclude HTML and text files from repository language statistics
+*.html linguist-detectable=false
+*.html linguist-documentation=true
+*.txt linguist-detectable=false
