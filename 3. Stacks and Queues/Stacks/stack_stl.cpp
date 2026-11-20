@@ -2,13 +2,23 @@
 #include <stack>
 using namespace std;
 
-// Print stack elements
-void printStack(stack<int> s) {
+// Print stack elements and restore them using a temp stack
+void printStack(stack<int>& s) {
+    stack<int> temp;
+
+    // 1. Pop, print, and save into temp
     while (!s.empty()) {
         cout << s.top() << " ";
+        temp.push(s.top());
         s.pop();
     }
     cout << endl;
+
+    // 2. Restore elements back into original stack
+    while (!temp.empty()) {
+        s.push(temp.top());
+        temp.pop();
+    }
 }
 
 int main() {
