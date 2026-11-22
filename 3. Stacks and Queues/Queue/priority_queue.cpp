@@ -33,6 +33,26 @@ public:
         size++;
     }
 
+    // Peek at the highest priority element without removing it
+    int peek() {
+        if (isEmpty()) {
+            cout << "Priority Queue is Empty" << endl;
+            return -1;
+        }
+
+        int highestIdx = 0;
+        for (int i = 1; i < size; i++) {
+            if (arr[i].priority > arr[highestIdx].priority) {
+                highestIdx = i;
+            }
+        }
+        return arr[highestIdx].value;
+    }
+
+    int getSize() {
+        return size;
+    }
+
     // Remove element with highest priority (largest priority number)
     int dequeue() {
         if (isEmpty()) {
@@ -80,12 +100,16 @@ int main() {
 
     cout << "Priority Queue items: ";
     pq.display();
+    cout << "Queue size: " << pq.getSize() << endl;
+    cout << "Highest priority element (peek): " << pq.peek() << endl;
 
     cout << "Dequeued highest priority element: " << pq.dequeue() << endl;
     cout << "Dequeued next highest priority element: " << pq.dequeue() << endl;
 
+    cout << "Highest priority element after dequeues (peek): " << pq.peek() << endl;
     cout << "Remaining queue: ";
     pq.display();
+    cout << "Queue size: " << pq.getSize() << endl;
 
     return 0;
 }
